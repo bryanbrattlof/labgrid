@@ -10,3 +10,4 @@ from .mmioprotocol import MMIOProtocol
 from .filesystemprotocol import FileSystemProtocol
 from .resetprotocol import ResetProtocol
 from .videoprotocol import VideoProtocol
+from .tivaprotocol import ConfigurationProtocol,RailData,TAIProtocol,PowerMeterProtocol,PowerResetProtocol,SysbootProtocol,SysbootRepository

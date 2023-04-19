@@ -198,3 +198,41 @@ imports:
         with warnings.catch_warnings():
             warnings.simplefilter("error")
             t = e.get_target("test1")
+
+    def test_tiva(self, tmpdir):
+        p = tmpdir.join("config.yaml")
+        p.write("""
+targets:
+  main:
+    drivers:
+      FakeConsoleDriver:
+        name: 'TivaSerial'
+      FakePowerDriver: 
+        name: 'FakePowerDriver'
+        bindings: { console: 'TivaSerial' }
+      FakeResetDriver: 
+        name: 'FakePorDriver'
+        bindings: { console: 'TivaSerial' }        
+      FakeSysbootDriver: 
+        name: 'FakeSysbootDriver'
+        bindings: { console: 'TivaSerial' }
+      FakeConfigDriver: 
+        name: 'FakeConfigDriver'
+        bindings: { console: 'TivaSerial' }
+      FakePowerMeterDriver: 
+        name: 'FakePowerMeterDriver'
+        bindings: { console: 'TivaSerial' }
+      TAIDriver:
+        name: "BoardAutomation"
+        bindings: {
+          power_meter_handle: 'FakePowerMeterDriver',
+          por_handle: 'FakePorDriver',
+          power_handle: 'FakePowerDriver',
+          sysboot_handle: 'FakeSysbootDriver',
+          config_handle: 'FakeConfigDriver',}""")
+        e = Environment(str(p))
+        target=e.get_target()
+        for driver in target.drivers:
+            print(driver) # for debug, pass -s to pytest
+        automation_handle=target.get_driver('TAIProtocol')
+        assert(automation_handle is not None)
