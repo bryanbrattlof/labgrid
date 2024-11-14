@@ -6,7 +6,10 @@ from importlib import import_module
 import attr
 
 from ..factory import target_factory
-from ..protocol import PowerProtocol, DigitalOutputProtocol, ResetProtocol
+from ..protocol import (
+        ConsoleProtocol, DigitalOutputProtocol,
+        PowerProtocol, ResetProtocol
+)
 from ..resource import NetworkPowerPort
 from ..step import step
 from ..util.proxy import proxymanager
@@ -108,6 +111,34 @@ class SiSPMPowerDriver(Driver, PowerResetMixin, PowerProtocol):
         if output.strip() == b"off":
             return False
         raise ExecutionError(f"Did not find port status in sispmctl output ({repr(output)})")
+
+
+@target_factory.reg_driver
+@attr.s(eq=False)
+class TIVAPowerDriver(Driver, PowerResetMixin, PowerProtocol):
+    """TIVAPowerDriver - Driver using a TIVA-C Microcontroller to control a target's power"""
+    bindings = {"console": ConsoleProtocol, }
+    delay = attr.ib(default=5.0, validator=attr.validators.instance_of(float))
+    dut = attr.ib(default="am62xx-sk", validator=attr.validators.instance_of(str))
+
+    @Driver.check_active
+    @step()
+    def on(self):
+        self.console.sendline("auto power on")
+        self.console.expect("Powering On DUT")
+
+    @Driver.check_active
+    @step()
+    def off(self):
+        self.console.sendline("auto power off")
+        self.console.expect("Powering Off DUT")
+
+    @Driver.check_active
+    @step()
+    def cycle(self):
+        self.off()
+        time.sleep(self.delay)
+        self.on()
 
 
 @target_factory.reg_driver
