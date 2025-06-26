@@ -19,6 +19,7 @@ from .powerdriver import ManualPowerDriver, ExternalPowerDriver, \
 from .usbloader import MXSUSBDriver, IMXUSBDriver, BDIMXUSBDriver, RKUSBDriver, UUUDriver
 from .usbsdmuxdriver import USBSDMuxDriver
 from .usbsdwiredriver import USBSDWireDriver
+from .usbsdswapdriver import USBSDSwapDriver
 from .common import Driver
 from .qemudriver import QEMUDriver
 from .modbusdriver import ModbusCoilDriver, WaveShareModbusCoilDriver
