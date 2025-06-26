@@ -237,6 +237,13 @@ class NetworkUSBSDMuxDevice(RemoteUSBResource):
         self.timeout = 10.0
         super().__attrs_post_init__()
 
+@target_factory.reg_resource
+@attr.s(eq=False)
+class NetworkUSBSDSwapDevice(RemoteUSBResource):
+    """The NetworkUSBSDSwapDevice describes a remotely accessible USBSDSwap device"""
+    def __attrs_post_init__(self):
+        self.timeout = 10.0
+        super().__attrs_post_init__()
 
 @target_factory.reg_resource
 @attr.s(eq=False)

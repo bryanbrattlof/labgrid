@@ -619,6 +619,50 @@ class USBSDMuxDevice(USBResource):
     def path(self):
         return self.disk_path
 
+@target_factory.reg_resource
+@attr.s(eq=False)
+class USBSDSwapDevice(USBResource):
+    """The USBSDSwapDevice describes an attached USBSDSwap device,
+    it is identified via USB using udev
+
+       https://github.com/Mr-Bossman/SD_Swap
+    """
+    disk_path = attr.ib(default=None)
+
+    def __attrs_post_init__(self):
+        self.match['ID_VENDOR_ID'] = '0bda'
+        self.match['ID_MODEL_ID'] = '0316'
+        super().__attrs_post_init__()
+
+    # Overwrite the avail attribute with our internal property
+    @property
+    def avail(self):
+        return bool(self.disk_path)
+
+    # Forbid the USBResource super class to set the avail property
+    @avail.setter
+    def avail(self, prop):
+        pass
+
+    # Overwrite the poll function. Only mark the SDMux as available if both
+    # paths are available.
+    def poll(self):
+        super().poll()
+        if self.device is not None and not self.avail:
+            for child in self.device.children:
+                self.logger.error(f"subsystem: {child.subsystem} device_type: {child.device_type}")
+                if child.subsystem == 'block' and child.device_type == 'disk':
+                    self.disk_path = child.device_node
+                    self.logger.error(self.disk_path)
+
+    def update(self):
+        super().update()
+        if self.device is None:
+            self.disk_path = None
+
+    @property
+    def path(self):
+        return self.disk_path
 
 @target_factory.reg_resource
 @attr.s(eq=False)

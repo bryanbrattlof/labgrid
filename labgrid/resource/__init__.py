@@ -28,6 +28,7 @@ from .udev import (
     USBNetworkInterface,
     USBPowerPort,
     USBSDMuxDevice,
+    USBSDSwapDevice,
     USBSDWireDevice,
     USBSDWire3Device,
     USBSerialPort,

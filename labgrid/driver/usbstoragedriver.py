@@ -35,6 +35,8 @@ class USBStorageDriver(Driver):
             "NetworkUSBMassStorage",
             "USBSDMuxDevice",
             "NetworkUSBSDMuxDevice",
+            "USBSDSwapDevice",
+            "NetworkUSBSDSwapDevice",
             "USBSDWireDevice",
             "NetworkUSBSDWireDevice",
             "USBSDWire3Device",

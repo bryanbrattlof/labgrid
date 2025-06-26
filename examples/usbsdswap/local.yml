@@ -1,0 +1,7 @@
+---
+targets:
+  main:
+    resources:
+      USBSDSwapDevice: {}
+    drivers:
+      USBSDSwapDriver: {}

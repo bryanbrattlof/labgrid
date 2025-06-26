@@ -405,6 +405,23 @@ class USBSDMuxExport(USBGenericExport):
             "control_path": self.local.control_path,
         }
 
+@attr.s(eq=False)
+class USBSDSwapExport(USBGenericExport):
+    """ResourceExport for USB devices accessed directly from userspace"""
+
+    def __attrs_post_init__(self):
+        super().__attrs_post_init__()
+
+    def _get_params(self):
+        """Helper function to return parameters"""
+        return {
+            "host": self.host,
+            "busnum": self.local.busnum,
+            "devnum": self.local.devnum,
+            "path": self.local.path,
+            "vendor_id": self.local.vendor_id,
+            "model_id": self.local.model_id,
+        }
 
 @attr.s(eq=False)
 class USBSDWireExport(USBGenericExport):
@@ -579,6 +596,7 @@ exports["AlteraUSBBlaster"] = USBGenericExport
 exports["SigrokUSBDevice"] = USBSigrokExport
 exports["SigrokUSBSerialDevice"] = USBSigrokExport
 exports["USBSDMuxDevice"] = USBSDMuxExport
+exports["USBSDSwapDevice"] = USBSDSwapExport
 exports["USBSDWireDevice"] = USBSDWireExport
 exports["USBSDWire3Device"] = USBSDWire3Export
 exports["USBDebugger"] = USBGenericExport
